@@ -4,18 +4,25 @@ import { MercadoPagoConfig, Preference, Payment } from "mercadopago";
 import fileUpload from "express-fileupload";
 import { getFiles, upLoadFile,getFileURL } from "./s3.js";
 
+//cors
+import { config } from "./config-cors.js"
+
+const app = express();
+const port = 3000;
+
+
 // Agrega credenciales
 const client = new MercadoPagoConfig({
   accessToken:
     "APP_USR-6954976907151707-021921-7ce64222e6ab3fdf97952bbdc7262bb8-177908791",
 });
 
-const app = express();
-const port = 3000;
+
 
 app.disable("x-powered-by");
 
-app.use(cors());
+app.use(cors(config.application.cors.server))
+
 app.use(
   fileUpload({
     useTempFiles: true,
@@ -35,10 +42,6 @@ app.get("/files", async (req, res) => {
 });
 
 app.get("/getUrlFiles/",async (req,res)=>{
-  const origin = req.header("origin");
-  if (ACCEPTED_ORIGINS.includes(origin) || !origin) {
-    res.header("Access-Control-Allow-Origin", origin);
-  }
   
   const result= await getFileURL();
   res.json(result)
@@ -63,7 +66,7 @@ app.post("/files", async (req, res) => {
 });
 
 const ACCEPTED_ORIGINS = [
-  "http://localhost:3000",
+  "http://localhost",
   "https://botasjusaino.netlify.app",
 ];
 
