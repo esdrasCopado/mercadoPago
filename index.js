@@ -3,6 +3,7 @@ import cors from "cors";
 import { MercadoPagoConfig, Preference, Payment } from "mercadopago";
 import fileUpload from "express-fileupload";
 import { getFiles, upLoadFile,getFileURL } from "./s3.js";
+import fs from 'fs';
 
 //cors
 import { config } from "./config-cors.js"
@@ -52,11 +53,14 @@ app.post("/files", async (req, res) => {
       return res.status(400).json({ message: "No file uploaded" });
     }
 
-    // Llama a la función upLoadFile() para manejar la carga del archivo
+    // Subir el archivo al servicio S3
     const result = await upLoadFile(req.files.file);
 
+    // Eliminar el archivo temporal después de haberlo subido al servicio S3
+    fs.unlinkSync(req.files.file.tempFilePath);
+
     // Envía una respuesta JSON con un mensaje de confirmación
-    console.log(result)
+    console.log(result);
     res.json({ result });
   } catch (error) {
     // Maneja cualquier error que pueda ocurrir durante la carga del archivo
@@ -64,6 +68,7 @@ app.post("/files", async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 });
+
 
 const ACCEPTED_ORIGINS = [
   "http://localhost",
