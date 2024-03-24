@@ -3,7 +3,7 @@ export const config = {
       cors: {
         server: [
           {
-            origin: ["http://localhost:80", "https://botasjusaino.netlify.app"],
+            origin: ["http://localhost:80", "https://proyectointegradoritson.netlify.app"],
             credentials: true
           }
         ]

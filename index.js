@@ -11,10 +11,6 @@ import { config } from "./config-cors.js"
 const app = express();
 const port = 3000;
 
-const corsOptions = {
-  origin: ["http://localhost", "https://proyectointegradoritson.netlify.app"],
-};
-app.use(cors(corsOptions));
 
 // Agrega credenciales
 const client = new MercadoPagoConfig({
@@ -73,6 +69,11 @@ app.post("/files", async (req, res) => {
   }
 });
 
+
+const ACCEPTED_ORIGINS = [
+  "http://localhost",
+  "https://proyectointegradoritson.netlify.app",
+];
 
 app.post("/create_preference", async (req, res) => {
   const origin = req.header("origin");
